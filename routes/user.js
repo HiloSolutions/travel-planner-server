@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
+const { format, parseISO } = require('date-fns');
 
 
 //Check if user exists
@@ -19,8 +20,17 @@ router.get('/getData', (req, res) => {
 
   db.query(queryStr)
     .then((result) => {
-      console.log('jhsgdhsg', result.rows);
-      res.json(result.rows);
+
+      const data = result.rows.map((obj) => {
+        const dateString = obj.date_updated;
+        const dateObject = new Date(dateString);
+        const formattedDate = format(dateObject, 'MMM. d, yyyy');
+        obj.date_updated = formattedDate;
+        return obj;
+      });
+
+      res.json(data);
+
     })
     .catch((err) => {
       console.error(err);
