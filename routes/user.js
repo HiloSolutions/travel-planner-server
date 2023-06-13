@@ -14,11 +14,11 @@ router.get('/getData', (req, res) => {
   FROM trips
   LEFT JOIN users ON users.id = trips.user_id
   LEFT JOIN locations ON trips.id = locations.trip_id
-  WHERE users.sub = 'jhsgdw77w6dtfsdyigl7';
+  WHERE users.sub = $1;
   `;
 
 
-  db.query(queryStr)
+  db.query(queryStr, params)
     .then((result) => {
 
       const data = result.rows.map((obj) => {
