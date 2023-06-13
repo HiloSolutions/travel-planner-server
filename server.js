@@ -19,12 +19,15 @@ app.get('/', (req, res) => {
   res.send('hello world from express');
 });
 
-//import ROUTER
+//import router
 const googleMapsController = require('./routes/googleMapsAPI');
+const userController = require('./routes/user');
 
 
 //use router
 app.use('/api/maps', googleMapsController);
+app.use('/api/user', userController);
+
 
 app.listen(port, () => {
   console.log(`app is listening on port ${port}`);
