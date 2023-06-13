@@ -4,12 +4,16 @@ const db = require("../db/connection");
 
 
 //Check if user exists
-router.get('/check', (req, res) => {
+router.get('/getData', (req, res) => {
   console.log("getting user data!");
-
+  const sub = req.query.sub;
+  const params = [sub];
   const queryStr = `
-  SELECT * FROM users
-  WHERE users.id = 1
+  SELECT trips.*, locations.* 
+  FROM trips
+  LEFT JOIN users ON users.id = trips.user_id
+  LEFT JOIN locations ON trips.id = locations.trip_id
+  WHERE users.sub = 'jhsgdw77w6dtfsdyigl7';
   `;
 
 
@@ -28,15 +32,15 @@ router.get('/check', (req, res) => {
 
 //add user to database if they don't already exist.
 router.post('/update', (req, res) => {
-  const sub = req.query.sub;
 
-  //check if user exists
+  const sub = req.query.sub;
   const selectQuery = `
   SELECT * FROM users
   WHERE sub = $1;
 `;
   const selectParams = [sub];
 
+  //check if user exists
   db.query(selectQuery, selectParams)
     .then((result) => {
 
