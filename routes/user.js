@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
-const { format, parseISO } = require('date-fns');
+const { format } = require('date-fns');
 
 
 //Check if user exists
@@ -25,6 +25,7 @@ router.get('/getData', (req, res) => {
         const dateString = obj.date_updated;
         const dateObject = new Date(dateString);
         const formattedDate = format(dateObject, 'MMM. d, yyyy');
+        // eslint-disable-next-line camelcase
         obj.date_updated = formattedDate;
         return obj;
       });
