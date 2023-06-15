@@ -2,12 +2,18 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
 const { formatDate } = require("../helper-functions/convertDates");
+const { format } = require('date-fns');
 
 router.get('/', (req, res) => {
   const id = req.query.id;
   const adjustedId = parseInt(id, 10);
   const query = `
-  SELECT * FROM trips
+  SELECT 
+    trip_name, 
+    trip_center_lat, 
+    trip_center_lng,  
+    zoom
+  FROM trips
   WHERE id = $1;
   `;
   const params = [adjustedId];
@@ -36,6 +42,40 @@ router.get('/', (req, res) => {
 
 
 
+router.get('/list', (req, res) => {
+  console.log("getting user data /list!");
+  const sub = req.query.sub;
+  const params = [sub];
+  const queryStr = `
+  SELECT trips.* 
+  FROM trips
+  LEFT JOIN users ON users.id = trips.user_id
+  WHERE users.sub = $1;
+  `;
+
+
+  db.query(queryStr, params)
+    .then((result) => {
+
+      const data = result.rows.map((obj) => {
+        const dateString = obj.date_updated;
+        const dateObject = new Date(dateString);
+        const formattedDate = format(dateObject, 'MMM. d, yyyy');
+        // eslint-disable-next-line camelcase
+        obj.date_updated = formattedDate;
+        return obj;
+      });
+      res.json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+
+});
+
+
+
 router.get('/locations', (req, res) => {
   const id = req.query.id;
   const adjustedId = parseInt(id, 10);
@@ -60,7 +100,6 @@ router.get('/locations', (req, res) => {
       res.status(500).json({ error: 'An error occurred' });
     });
 });
-
 
 
 

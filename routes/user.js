@@ -4,41 +4,6 @@ const db = require("../db/connection");
 const { format } = require('date-fns');
 
 
-//Check if user exists
-router.get('/getData', (req, res) => {
-  console.log("getting user data!");
-  const sub = req.query.sub;
-  const params = [sub];
-  const queryStr = `
-  SELECT trips.*, locations.* 
-  FROM trips
-  LEFT JOIN users ON users.id = trips.user_id
-  LEFT JOIN locations ON trips.id = locations.trip_id
-  WHERE users.sub = $1;
-  `;
-
-
-  db.query(queryStr, params)
-    .then((result) => {
-
-      const data = result.rows.map((obj) => {
-        const dateString = obj.date_updated;
-        const dateObject = new Date(dateString);
-        const formattedDate = format(dateObject, 'MMM. d, yyyy');
-        // eslint-disable-next-line camelcase
-        obj.date_updated = formattedDate;
-        return obj;
-      });
-
-      res.json(data);
-
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-
-
-});
 
 
 //add user to database if they don't already exist.
