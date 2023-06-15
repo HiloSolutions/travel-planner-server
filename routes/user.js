@@ -56,13 +56,9 @@ router.post('/update', (req, res) => {
     .then((result) => {
 
       if (result.rows.length > 0) {
-
         // sub value already exists in the database
-        console.log('sub value already exists');
         res.json({ message: 'sub value already exists' });
-
       } else {
-
         // sub value does not exist, perform insert query
         const insertQuery = `
           INSERT INTO users (sub)
@@ -72,7 +68,6 @@ router.post('/update', (req, res) => {
 
         db.query(insertQuery, insertParams)
           .then(() => {
-            console.log('added user to db');
             res.json({ message: 'User added to database' });
           })
           .catch((err) => {

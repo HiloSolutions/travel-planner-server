@@ -2,9 +2,33 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
 
+router.get('/', (req, res) => {
+  const id = req.query.id;
+  const adjustedId = parseInt(id, 10) + 1;
+
+  const query = `
+  SELECT * FROM trips
+  WHERE id = $1;
+  `;
+
+  const params = [adjustedId];
+
+  db.query(query, params)
+    .then((response) => {
+      res.json(response.rows[0]);
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'An error occurred' });
+    });
+});
+
+
 router.post('/update', (req, res) => {
   const { inputs, id } = req.body;
   const { lat, lng, startDate, endDate, zoom } = inputs;
+
+  const adjustedId = parseInt(id, 10) + 1;
+
 
   const query = `
   UPDATE trips
@@ -22,7 +46,7 @@ router.post('/update', (req, res) => {
     startDate,
     endDate,
     zoom,
-    id
+    adjustedId
   ];
 
   db.query(query, params)
