@@ -1,6 +1,6 @@
-
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS trips CASCADE;
+DROP TABLE IF EXISTS location_types CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 
 CREATE TABLE users (
@@ -20,12 +20,20 @@ CREATE TABLE trips (
   date_updated DATE DEFAUlT CURRENT_DATE
 );
 
+CREATE TABLE location_types (
+  id SERIAL PRIMARY KEY,
+  location_type_name VARCHAR(50) NOT NULL,
+  location_type_category VARCHAR(50) NOT NULL
+);
+
 CREATE TABLE locations (
   id SERIAL PRIMARY KEY,
   trip_id INTEGER REFERENCES trips(id) ON DELETE CASCADE,
+  location_type_id INTEGER REFERENCES location_types(id) ON DELETE CASCADE,
   location_name VARCHAR(255) NOT NULL,
-  location_type VARCHAR(255) NOT NULL,
   location_lat DECIMAL,
   location_lng DECIMAL,
   date_updated DATE DEFAUlT CURRENT_DATE
 );
+
+
