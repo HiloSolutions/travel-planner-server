@@ -4,7 +4,7 @@ const db = require("../db/connection");
 
 router.get('/', (req, res) => {
   const id = req.query.id;
-  const adjustedId = parseInt(id, 10) + 1;
+  const adjustedId = parseInt(id, 10);
 
   const query = `
   SELECT * FROM trips
