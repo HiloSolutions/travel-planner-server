@@ -76,52 +76,6 @@ router.get('/list', (req, res) => {
 });
 
 
-//get all location types available to choose from (not specific to user)
-router.get('/locationCategories', (req, res) => {
-  const query = `
-  SELECT 
-    location_type_name,
-    location_type_category 
-  FROM location_types;
-  `;
-
-  db.query(query)
-    .then((response) => {
-      res.json(response.rows);
-    })
-    .catch(() => {
-      res.status(500).json({ error: 'An error occurred' });
-    });
-});
-
-
-//get he locations saved by the user
-router.get('/locations', (req, res) => {
-  const id = req.query.id;
-  const adjustedId = parseInt(id, 10);
-  const query = `
-  SELECT 
-    locations.location_name, 
-    locations.location_lat, 
-    locations.location_lng, 
-    location_types.location_type_name,
-    location_types.location_type_category 
-  FROM locations
-  LEFT JOIN location_types ON location_types.id = location_type_id
-  WHERE locations.trip_id = $1;
-  `;
-  const params = [adjustedId];
-
-  db.query(query, params)
-    .then((response) => {
-      res.json(response.rows);
-    })
-    .catch(() => {
-      res.status(500).json({ error: 'An error occurred' });
-    });
-});
-
-
 
 router.post('/update', (req, res) => {
   const { inputs, id } = req.body;

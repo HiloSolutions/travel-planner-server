@@ -23,12 +23,14 @@ app.get('/', (req, res) => {
 const googleMapsController = require('./routes/googleMapsAPI');
 const userController = require('./routes/user');
 const tripController = require('./routes/trip');
+const locationController = require('./routes/location');
 
 
 //use router
 app.use('/api/maps', googleMapsController);
 app.use('/api/user', userController);
 app.use('/trip', tripController);
+app.use('/location', locationController);
 
 
 
