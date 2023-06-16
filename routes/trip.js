@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const { formatDate } = require("../helper-functions/convertDates");
 const { format } = require('date-fns');
 
+//get data related to the trip itself (there can be many locations in one trip)
 router.get('/', (req, res) => {
   const id = req.query.id;
   const adjustedId = parseInt(id, 10);
@@ -26,7 +27,7 @@ router.get('/', (req, res) => {
       if (endDate < startDate) {
         endDate = startDate;
       }
-    
+
       const data = {
         ...response.rows[0],
         'trip_start_date': startDate,
@@ -41,7 +42,7 @@ router.get('/', (req, res) => {
 });
 
 
-
+//get list of all trips made by the user
 router.get('/list', (req, res) => {
   console.log("getting user data /list!");
   const sub = req.query.sub;
@@ -75,7 +76,26 @@ router.get('/list', (req, res) => {
 });
 
 
+//get all location types available to choose from (not specific to user)
+router.get('/locationCategories', (req, res) => {
+  const query = `
+  SELECT 
+    location_type_name,
+    location_type_category 
+  FROM location_types;
+  `;
 
+  db.query(query)
+    .then((response) => {
+      res.json(response.rows);
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'An error occurred' });
+    });
+});
+
+
+//get he locations saved by the user
 router.get('/locations', (req, res) => {
   const id = req.query.id;
   const adjustedId = parseInt(id, 10);

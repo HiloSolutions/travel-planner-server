@@ -24,7 +24,16 @@ INSERT INTO location_types (
   location_type_category
 )
 VALUES
-('Sightseeing', 'sightSeeing');
+('Tourist Attraction', 'sightSeeing'),
+('Outdoor Activity', 'outdoors'),
+('Nightlife', 'nightlife'),
+('Food and Drink', 'foodAndDrink'),
+('Arts and Education', 'artAndEducation'),
+('Point of Curiosity', 'pointOfCuriosity'),
+('Accomodation', 'accomodation'),
+('Airport / Port / Station', 'transportation'),
+('Pit Stop', 'pitstop');
+
 
 
 
