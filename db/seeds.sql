@@ -32,7 +32,8 @@ VALUES
 ('Point of Curiosity', 'pointOfCuriosity'),
 ('Accomodation', 'accomodation'),
 ('Airport / Port / Station', 'transportation'),
-('Pit Stop', 'pitstop');
+('Pit Stop', 'pitstop'),
+('No Category', 'noCategory');
 
 
 

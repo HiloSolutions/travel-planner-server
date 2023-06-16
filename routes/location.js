@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const express = require("express");
 const router = express.Router();
 const db = require("../db/connection");
@@ -22,7 +23,7 @@ router.get('/categories', (req, res) => {
 
 
 
-//get he locations saved by the user
+//get the locations saved by the user
 router.get('/saved', (req, res) => {
   const id = req.query.id;
   const adjustedId = parseInt(id, 10);
@@ -47,6 +48,7 @@ router.get('/saved', (req, res) => {
 });
 
 
+
 //delete a location from the db FOREVER!
 router.delete('/delete', (req, res) => {
   const tripId = req.query.tripId;
@@ -60,6 +62,62 @@ router.delete('/delete', (req, res) => {
   db.query(query, params)
     .then(() => {
       res.json({ message: 'Location deleted from database' });
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'An error occurred' });
+    });
+});
+
+
+
+router.post('/add', (req, res) => {
+  const { locationId, tripId, sub } = req.body;
+  const {
+    location_lat,
+    location_lng,
+    location_name,
+    location_type_category,
+    location_type_name,
+  } = locationId;
+
+
+  const query = `
+  INSERT INTO locations (
+    trip_id,
+    location_name,
+    location_type_id,
+    location_lat,
+    location_lng
+    )
+  SELECT
+    trips.id,
+    $1,
+    location_types.id,
+    $2,
+    $3
+  FROM trips
+  JOIN users ON trips.user_id = users.id
+  JOIN location_types ON location_types.location_type_name = $4
+    AND location_types.location_type_category = $5
+  WHERE users.sub = $6
+    AND trips.id = $7;
+    
+`;
+
+  const params = [
+    location_name,           // $1
+    location_lat,            // $2
+    location_lng,            // $3
+    location_type_name,      // $4
+    location_type_category,  // $5
+    sub,                     // $6
+    tripId                   // $7
+  ];
+
+  console.log(params);
+  db.query(query, params)
+    .then(() => {
+      res.json({ message: 'Location added to database' });
     })
     .catch(() => {
       res.status(500).json({ error: 'An error occurred' });
