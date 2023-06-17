@@ -114,10 +114,60 @@ router.post('/add', (req, res) => {
     tripId                   // $7
   ];
 
-  console.log(params);
   db.query(query, params)
     .then(() => {
       res.json({ message: 'Location added to database' });
+    })
+    .catch(() => {
+      res.status(500).json({ error: 'An error occurred' });
+    });
+});
+
+
+//edit location in the database
+router.post('/edit', (req, res) => {
+  const { location } = req.body;
+  const {
+    name,
+    lat,
+    lng,
+    category,
+    id
+  } = location;
+
+
+  const query = `
+  UPDATE locations
+  SET
+    location_name = $1,
+    location_lat = $2,
+    location_lng = $3,
+    location_type_id = (
+      SELECT id
+      FROM location_types
+      WHERE location_type_category = $4
+      LIMIT 1
+    ),
+    date_updated = CURRENT_DATE
+  FROM
+    location_types
+  WHERE
+    locations.location_type_id = location_types.id
+    AND locations.id = $5;
+`;
+
+  const params = [
+    name,
+    lat,
+    lng,
+    category,
+    id
+  ];
+
+
+  db.query(query, params)
+    .then(() => {
+      res.json({ message: 'Location edited in database' });
     })
     .catch(() => {
       res.status(500).json({ error: 'An error occurred' });
