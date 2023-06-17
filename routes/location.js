@@ -34,7 +34,8 @@ router.get('/saved', (req, res) => {
     location_types.location_type_category 
   FROM locations
   LEFT JOIN location_types ON location_types.id = location_type_id
-  WHERE locations.trip_id = $1;
+  WHERE locations.trip_id = $1
+  ORDER BY date_updated DESC;
   `;
   const params = [adjustedId];
 
@@ -131,7 +132,7 @@ router.post('/edit', (req, res) => {
     location_name,
     location_lat,
     location_lng,
-    category,
+    location_type_category,
     id
   } = location;
   
@@ -160,7 +161,7 @@ router.post('/edit', (req, res) => {
     location_name,
     location_lat,
     location_lng,
-    category,
+    location_type_category,
     id
   ];
 
