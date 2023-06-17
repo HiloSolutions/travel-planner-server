@@ -80,7 +80,7 @@ router.post('/add', (req, res) => {
     location_type_name,
   } = locationId;
 
-
+  
   const query = `
   INSERT INTO locations (
     trip_id,
@@ -128,13 +128,13 @@ router.post('/add', (req, res) => {
 router.post('/edit', (req, res) => {
   const { location } = req.body;
   const {
-    name,
-    lat,
-    lng,
+    location_name,
+    location_lat,
+    location_lng,
     category,
     id
   } = location;
-
+  
 
   const query = `
   UPDATE locations
@@ -157,9 +157,9 @@ router.post('/edit', (req, res) => {
 `;
 
   const params = [
-    name,
-    lat,
-    lng,
+    location_name,
+    location_lat,
+    location_lng,
     category,
     id
   ];
